@@ -24,7 +24,7 @@ def ds():
     ds = xr.Dataset(
         {
             'x': xr.DataArray(np.arange(4) - 2, dims='x'),
-            'foo': xr.DataArray(np.ones(4, dtype='i4'), dims='x'),
+            'foo': xr.DataArray(np.ones(4, dtype='i4'), dims='x', attrs=dict(units="K")),
             'bar': xr.DataArray(np.arange(8, dtype=np.float32).reshape(4, 2), dims=('x', 'y')),
         }
     )
@@ -223,11 +223,15 @@ def test_dataset_empty_constructor():
 def test_dataset_example(ds):
     ds_schema = DatasetSchema(
         data_vars={
-            'foo': DataArraySchema(name='foo', dtype=np.int32, dims=['x']),
+            'foo': DataArraySchema(
+                name='foo',
+                dtype=np.int32,
+                dims=['x'],
+                attrs=AttrsSchema(attrs=dict(units=AttrSchema(value="K")))
+            ),
             'bar': DataArraySchema(name='bar', dtype=np.floating, dims=['x', 'y']),
         },
         coords={'x': DataArraySchema(name='x', dtype=np.int64, dims=['x'])},
-        attrs={}
     )
 
     jsonschema.validate(ds_schema.json, ds_schema._json_schema)
@@ -284,7 +288,7 @@ def test_dataset_with_attrs_schema():
     expected_value = 'expected_value'
     actual_value = 'actual_value'
     ds = xr.Dataset(attrs={name: actual_value})
-    ds_schema = DatasetSchema(attrs={name: AttrSchema(value=expected_value)})
+    ds_schema = DatasetSchema(dict(attrs={name: AttrSchema(value=expected_value)}))
     jsonschema.validate(ds_schema.json, ds_schema._json_schema)
 
     ds_schema_2 = DatasetSchema(attrs=AttrsSchema({name: AttrSchema(value=expected_value)}))

@@ -48,7 +48,7 @@ class DatasetSchema(BaseSchema):
             }
         if 'coords' in obj:
             kwargs['coords'] = CoordsSchema.from_json(obj["coords"])
-        if 'attrs' in obj:
+        if 'attrs' in obj and obj["attrs"] != {}:
             kwargs['attrs'] = AttrsSchema.from_json(obj["attrs"])
 
         return cls(**kwargs)
@@ -82,7 +82,7 @@ class DatasetSchema(BaseSchema):
         if self.coords is not None:
             self.coords.validate(ds.coords)
 
-        if self.attrs:
+        if self.attrs is not None:
             self.attrs.validate(ds.attrs)
 
         if self.checks:
@@ -98,7 +98,7 @@ class DatasetSchema(BaseSchema):
         if value is None or isinstance(value, AttrsSchema):
             self._attrs = value
         else:
-            self._attrs = AttrsSchema(value)
+            self._attrs = AttrsSchema(**value)
 
     @property
     def data_vars(self) -> Optional[Dict[Hashable, Optional[DataArraySchema]]]:
