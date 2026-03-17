@@ -396,12 +396,12 @@ class AttrsSchema(BaseSchema):
 
     @classmethod
     def from_json(cls, obj: dict):
-        attrs = obj.pop("attrs") if "attrs" in obj else {}
+        attrs = obj.pop('attrs') if 'attrs' in obj else {}
         attrs = {k: AttrSchema(**v) for k, v in attrs.items()}
         return cls(
             attrs,
             require_all_keys=obj.get('require_all_keys'),
-            allow_extra_keys=obj.get('allow_extra_keys')
+            allow_extra_keys=obj.get('allow_extra_keys'),
         )
 
     def validate(self, attrs: Any) -> None:

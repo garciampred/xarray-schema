@@ -24,7 +24,7 @@ def ds():
     ds = xr.Dataset(
         {
             'x': xr.DataArray(np.arange(4) - 2, dims='x'),
-            'foo': xr.DataArray(np.ones(4, dtype='i4'), dims='x', attrs=dict(units="K")),
+            'foo': xr.DataArray(np.ones(4, dtype='i4'), dims='x', attrs=dict(units='K')),
             'bar': xr.DataArray(np.arange(8, dtype=np.float32).reshape(4, 2), dims=('x', 'y')),
         }
     )
@@ -227,7 +227,7 @@ def test_dataset_example(ds):
                 name='foo',
                 dtype=np.int32,
                 dims=['x'],
-                attrs=AttrsSchema(attrs=dict(units=AttrSchema(value="K")))
+                attrs=AttrsSchema(attrs=dict(units=AttrSchema(value='K')))
             ),
             'bar': DataArraySchema(name='bar', dtype=np.floating, dims=['x', 'y']),
         },
